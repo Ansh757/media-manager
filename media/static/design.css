@@ -1,0 +1,23 @@
+/* Styling for the Website */
+
+body {
+    background-color: black;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-style: oblique;
+    font-weight: bold;
+}
+
+.col-lg-8 {
+    color: rgb(0, 0, 0);
+    text-decoration: double;
+    background-color: rgb(55, 207, 88);
+    padding: 1rem;
+    text-align: center;
+}
+
+.col-lg-4 {
+    color: blue;
+    padding: 1rem;
+    background-color: aquamarine;
+    text-align: center;
+}
