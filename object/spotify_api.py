@@ -17,12 +17,12 @@ VALID_ROUTES = ["home_page", "login_page", "authorization_page", "tracks_page", 
 class SpotifyAPI:
     """
     A SpotifyAPI Object that will include the Authorization, extracting songs, 
-    ablums, and other useful information. 
+    albums, and other useful information.
 
     Instance Variables: 
         - auth_manager: SpotifyOAuth object by creating a brand new one every time.  
         - client_id: Unique ID obtained from the developer tools on https://developer.spotify.com/
-        - client_secret_key: Unqiue secret key obtained from the developer tools on https://developer.spotify.com/
+        - client_secret_key: Unique secret key obtained from the developer tools on https://developer.spotify.com/
         - session_token: refers to the current session key. 
         - redirect_url: the route to be redirected to. 
         - scope: the data that needs to be requested. 
