@@ -24,28 +24,25 @@ def login_page():
     auth_url = sp_oauth.auth_manager.get_authorize_url()
     return redirect(auth_url)
 
+
 @app.route('/redirect')
 def authorization_page():
     sp_oauth = SpotifyAPI()
     sp_oauth.create_spotify_oauth("authorization_page", "user-library-read")
     session.clear()
-    # sp_oauth.generate_new_session()
+    sp_oauth.generate_new_session()
 
     # request_code = request.args.get('code')
     # session_token = sp_oauth.auth_manager.get_access_token(request_code)
     # session[SESSION_TOKEN] = session_token
-    # TODO: BUG FOUND! Fix the refresh token and check token -- the extraction seem to have a bug
     try:
         token_information = sp_oauth.check_token()
-
+        # TODO: Continue from here. Grab the refresh token and then work on extraction of the songs and the frontend
     except:
         raise SessionError
-    # return redirect("home")
-    return "Authorize"
+    return redirect("home")
 
 
 @app.route('/myTracks')
 def tracks_page():
-    
-
     return "List of my Tracks"
