@@ -2,31 +2,27 @@
     Class for the Spotify API 
 """
 from __future__ import annotations
-from time import time
+import time
 from typing import Any
 
-from requests import request, session
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-from credentials_info import SECRET_CLIENT_ID, SECRET_KEY
-from flask import url_for, request
+from media.credentials_info import SECRET_CLIENT_ID, SECRET_KEY
+from flask import url_for, request, session
 
 # Global Variable for the SESSION_TOKEN
-SESSION_TOKEN = "session-token"
-VALID_ROUTES = ["home_page", "login_page",
-                "authorization_page", "tracks_page", "albums_page"]
 TOKEN_INFO = "session-token"
 
 
 class SpotifyAPI:
     """
     A SpotifyAPI Object that will include the Authorization, extracting songs, 
-    ablums, and other useful information. 
+    albums, and other useful information.
 
     Instance Variables: 
         - auth_manager: SpotifyOAuth object by creating a brand new one every time.  
         - client_id: Unique ID obtained from the developer tools on https://developer.spotify.com/
-        - client_secret_key: Unqiue secret key obtained from the developer tools on https://developer.spotify.com/
+        - client_secret_key: Unique secret key obtained from the developer tools on https://developer.spotify.com/
         - session_token: refers to the current session key. 
         - redirect_url: the route to be redirected to. 
         - scope: the data that needs to be requested. 
@@ -34,10 +30,9 @@ class SpotifyAPI:
     auth_manager: Any
     client_id: str
     client_secret_key: str
-    session_token: str
+    session_token: Any
     redirect_url: str
     scope: str
-    session
 
     def __init__(self) -> None:
         self.auth_manager = None
@@ -45,7 +40,7 @@ class SpotifyAPI:
         self.client_secret_key = SECRET_KEY
         self.redirect_url = ""
         self.scope = ""
-        self.session_token = ""
+        self.session_token = None
 
     def create_spotify_oauth(self, redirect_to_url: str, request_for: str) -> None:
         """
@@ -55,14 +50,11 @@ class SpotifyAPI:
                 - redirected_to_url must be a valid route
         """
 
-        if redirect_to_url in VALID_ROUTES:
-            self.auth_manager = SpotifyOAuth(client_id=self.client_id,
-                                             client_secret=self.client_secret_key,
-                                             redirect_uri=url_for(
-                                                 redirect_to_url, _external=True),
-                                             scope=request_for)
-        else:
-            raise ValueError
+        self.auth_manager = SpotifyOAuth(client_id=self.client_id,
+                                         client_secret=self.client_secret_key,
+                                         redirect_uri=url_for(
+                                             redirect_to_url, _external=True),
+                                         scope=request_for)
 
     def generate_new_session(self) -> None:
         """
@@ -84,14 +76,13 @@ class SpotifyAPI:
 
         # Check if the token is expired
         current_time = int(time.time())
-        expires = self.session_token['expires_at'] - current_time < 60
+        expires = self.session_token["expires_at"] - current_time < 60
         if expires:
             # Create a new token
             sp_oauth = SpotifyAPI()
             sp_oauth.create_spotify_oauth(
                 "authorization_page", "user-library-read")
-            self.session_token = sp_oauth.auth_manager.refresh_access_token(
-                self.session_info['refresh_token'])
+            self.session_token = sp_oauth.auth_manager.refresh_access_token(self.session_token['refresh_token'])
         return self.session_token
 
 
@@ -105,6 +96,6 @@ class SessionError(Exception):
 
     message: str
 
-    def __init__(self, msg="Error Occured during the session's token extraction") -> None:
+    def __init__(self, msg="Error Occurred during the session's token extraction") -> None:
         self.message = msg
         super().__init__(self.message)

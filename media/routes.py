@@ -1,9 +1,9 @@
 """ File For the Endpoints """
+import sys
 
 from media import app
 from flask import render_template, redirect, url_for, session
-from media.spotify_api import SessionError, check_token
-from object.spotify_api import SpotifyAPI
+from object.spotify_api import SpotifyAPI, SessionError
 
 
 # A Key within this a session
@@ -25,7 +25,8 @@ def login_page():
     sp_oauth = SpotifyAPI()
     sp_oauth.create_spotify_oauth("authorization_page", "user-library-read")
     auth_url = sp_oauth.auth_manager.get_authorize_url()
-    return redirect(auth_url)
+    # return redirect(auth_url)
+    return "LOGIN"
 
 
 @app.route('/redirect')
