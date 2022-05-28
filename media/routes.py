@@ -2,6 +2,7 @@
 
 from media import app
 from flask import render_template, redirect, url_for, session
+from media.spotify_api import SessionError, check_token
 from object.spotify_api import SpotifyAPI
 
 
@@ -36,9 +37,15 @@ def authorization_page():
     # request_code = request.args.get('code')
     # session_token = sp_oauth.auth_manager.get_access_token(request_code)
     # session[SESSION_TOKEN] = session_token
+    try:
+        token_information = sp_oauth.check_token()
+    except:
+        raise SessionError
     return redirect(url_for("home_page", _external=True))
 
 
 @app.route('/myTracks')
 def tracks_page():
+    
+
     return "List of my Tracks"
