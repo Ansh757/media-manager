@@ -2,8 +2,8 @@
 
 from media import app
 from flask import render_template, redirect, url_for, session
-# from spotipy.oauth2 import SpotifyOAuth
-from spotify_api import SpotifyAPI
+from object.spotify_api import SpotifyAPI
+
 
 # A Key within this a session
 
@@ -26,6 +26,7 @@ def login_page():
     auth_url = sp_oauth.auth_manager.get_authorize_url()
     return redirect(auth_url)
 
+
 @app.route('/redirect')
 def authorization_page():
     sp_oauth = SpotifyAPI()
@@ -41,4 +42,3 @@ def authorization_page():
 @app.route('/myTracks')
 def tracks_page():
     return "List of my Tracks"
-

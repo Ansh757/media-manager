@@ -4,16 +4,14 @@
 from __future__ import annotations
 from typing import Any
 
-from requests import request, session
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-from credentials_info import SECRET_CLIENT_ID, SECRET_KEY
-from flask import url_for, request
+from media.credentials_info import SECRET_CLIENT_ID, SECRET_KEY
+from flask import url_for, request, session
 
 # Global Variable for the SESSION_TOKEN
 SESSION_TOKEN = "session-token"
 VALID_ROUTES = ["home_page", "login_page", "authorization_page", "tracks_page", "albums_page"]
-SESSION_TOKEN = "session-token"
 
 
 class SpotifyAPI:
