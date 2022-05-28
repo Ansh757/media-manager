@@ -19,30 +19,29 @@ def home_page():
 
 @app.route('/login')
 def login_page():
-    # sp_oauth = make_spotify_oauth(SECRET_CLIENT_ID, SECRET_KEY)
-    # auth_url = sp_oauth.get_authorize_url()
-    # return redirect(auth_url)
     sp_oauth = SpotifyAPI()
     sp_oauth.create_spotify_oauth("authorization_page", "user-library-read")
     auth_url = sp_oauth.auth_manager.get_authorize_url()
-    # return redirect(auth_url)
-    return "LOGIN"
-
+    return redirect(auth_url)
 
 @app.route('/redirect')
 def authorization_page():
     sp_oauth = SpotifyAPI()
     sp_oauth.create_spotify_oauth("authorization_page", "user-library-read")
     session.clear()
-    sp_oauth.generate_new_session()
+    # sp_oauth.generate_new_session()
+
     # request_code = request.args.get('code')
     # session_token = sp_oauth.auth_manager.get_access_token(request_code)
     # session[SESSION_TOKEN] = session_token
+    # TODO: BUG FOUND! Fix the refresh token and check token -- the extraction seem to have a bug
     try:
         token_information = sp_oauth.check_token()
+
     except:
         raise SessionError
-    return redirect(url_for("home_page", _external=True))
+    # return redirect("home")
+    return "Authorize"
 
 
 @app.route('/myTracks')
