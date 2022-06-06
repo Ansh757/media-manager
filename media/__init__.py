@@ -1,6 +1,6 @@
 """ Flask App"""
 from flask import Flask
-from media.credentials_info import SESSION_SECRET_KEY
+from credentials.credentials_info import SESSION_SECRET_KEY
 # from spotipy import SpotifyOAuth
 
 app = Flask(__name__)
