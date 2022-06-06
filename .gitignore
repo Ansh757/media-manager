@@ -52,4 +52,4 @@ Mkfile.old
 dkms.conf
 
 # Files to be igonred
-media/credentials_info.py
+credentials/credentials_info.py
