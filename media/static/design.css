@@ -10,13 +10,16 @@ body {
     color: rgb(0, 0, 0);
     text-decoration: double;
     background-color: rgb(55, 207, 88);
-    padding: 0rem;
     text-align: center;
 }
 
 .col-lg-4 {
     color: blue;
-    padding: 0rem;
     background-color: aquamarine;
     text-align: center;
+}
+
+.navbar {
+    font-weight: bold;
+    font-size: large;
 }
