@@ -53,3 +53,5 @@ dkms.conf
 
 # Files to be igonred
 credentials/credentials_info.py
+.cache
+.idea
