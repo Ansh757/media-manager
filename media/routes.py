@@ -48,7 +48,7 @@ def tracks_page():
         redirect("/")
 
     sp = spotipy.Spotify(auth=session_token["access_token"])
-    return sp.current_user_saved_tracks(20, 0)
+    return sp.current_user_saved_tracks(20, 0)["items"][0]
 
 
 def check_token() -> session:

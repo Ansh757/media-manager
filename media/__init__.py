@@ -2,6 +2,7 @@
 from flask import Flask
 from credentials.credentials_info import SESSION_SECRET_KEY
 from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 import os
 
 # Create App Object
@@ -16,6 +17,9 @@ app.secret_key = SESSION_SECRET_KEY
 # Configuring Database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(base_dir, "db.sqlite")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Initialize Marshmallow
+ma = Marshmallow(app)
 
 # Initialize Database
 db = SQLAlchemy(app)
