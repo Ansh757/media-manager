@@ -5,5 +5,19 @@
 {% endblock %}
 
 {% block content %}
-    This is Home Page
+<div>
+    <h1 class="header">
+        <ul> Welcome! Please hit the Login Button to get started. <br> You will have access to the following things
+            upon login.
+            <li> Songs </li>
+            <li> Albums </li>
+            <li> Artists </li>
+        </ul>
+    </h1>
+    <div class="button-styling">
+        <a class="btn btn-primary btn-lg" href="{{ url_for('login_page') }}" role="button"> Login Page </a>
+    </div>
+
+</div>
 {% endblock%}
+

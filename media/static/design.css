@@ -6,7 +6,7 @@ body {
     font-style: oblique;
 }
 
-.col-lg-8 {
+.col-md-8 {
     color: rgb(0, 0, 0);
     text-decoration: double;
     background-color: rgb(55, 207, 88);
@@ -22,4 +22,15 @@ body {
 .navbar {
     font-weight: bold;
     font-size: large;
+}
+
+.header {
+    font-weight: bold;
+    color: white;
+}
+
+.button-styling{
+    margin-left: 50px;
+    height: 10rem;
+    width: 100rem;
 }
