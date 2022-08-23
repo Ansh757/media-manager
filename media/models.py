@@ -8,16 +8,16 @@ from media import db, ma
 
 
 # Class to store the Spotify Data
-class SpotifyData(db.Model):
+class SongData(db.Model):
     """
-    ...
+    Song Data class to store the information of each song.
     """
     id = db.Column(db.Integer, primary_key=True)
-    song_name = db.Column(db.String(length=50), unique=True, nullable=False)
+    song_name = db.Column(db.String(length=50), unique=False, nullable=False)
     artist_name = db.Column(db.String(length=100), nullable=False)
-    album_uri = db.Column(db.String(length=100), unique=True, nullable=False)
-    album_name = db.Column(db.String(length=100), unique=True, nullable=True)
-    song_uri = db.Column(db.String(length=100))
+    album_uri = db.Column(db.String(length=100), unique=False, nullable=False)
+    album_name = db.Column(db.String(length=100), unique=False, nullable=True)
+    song_uri = db.Column(db.String(length=100), unique=False, nullable=False)
 
     def __init__(self,
                  song_name: str,
@@ -32,15 +32,18 @@ class SpotifyData(db.Model):
         self.album_uri = album_uri
 
 
-class SpotifyDataSchema(ma.Schema):
+class SongDataSchema(ma.Schema):
     """
-    ...
+    SongData Schema to get the store the fields
     """
 
     class Meta:
+        """
+        ...
+        """
         fields = ('id', 'song_name', 'artist_name', 'song_uri',
                   'album_name', 'album_uri')
 
 
-sp_data_schema = SpotifyDataSchema(strict=True)
-sp_datas_schemas = SpotifyDataSchema(many=True, strict=True)
+sp_data_schema = SongDataSchema()
+sp_datas_schemas = SongDataSchema(many=True)
