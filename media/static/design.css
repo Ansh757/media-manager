@@ -1,7 +1,15 @@
 /* Styling for base.html */
-
 body {
-    background-color: black;
+     width: 100%;
+       min-height: 100vh;
+       background: linear-gradient(
+         to right,
+         #B4F8C8 0%,
+         #B4F8C8 66.59%,
+         black 66.59%,
+         black 100%
+       );
+
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-style: oblique;
 }
@@ -34,3 +42,4 @@ body {
     height: 10rem;
     width: 100rem;
 }
+

@@ -7,20 +7,35 @@ from media import app
 from flask import render_template, redirect, request, session, url_for, flash
 from credentials.credentials_info import SECRET_CLIENT_ID, SECRET_KEY, TOKEN_INFO
 import time
+
 from media.models import SongData
 from media import db
 
 
 # Endpoint for Home Page
 @app.route('/')
-@app.route('/home')
-def home_page():
-    # TODO: Render home.html
-    return render_template("home.html")
+def default_page() -> object:
+    """
+    The Login Page
+    """
+    return render_template("intro.html")
+
+
+@app.route('/home', methods=['GET', 'POST'])
+def home_page() -> object:
+    """
+    Home Page Route that renders the home.html
+    """
+    all_songs = SongData.query.all()
+    return render_template("home.html", items=all_songs)
 
 
 @app.route('/login')
-def login_page():
+def login_page() -> object:
+    """
+    A step before the login page -- gets the redirect url that
+    redirects the user to the Spotify OAuthorization page
+    """
     sp_oauth = create_user_oauth()
     # # Gets the redirect url set up in the devs tools
     auth_url = sp_oauth.get_authorize_url()
@@ -28,7 +43,10 @@ def login_page():
 
 
 @app.route('/redirect')
-def authorization_page():
+def authorization_page() -> object:
+    """
+    This route comes from the redirected url and upon login, brings the users tracks.
+    """
     sp_oauth = create_user_oauth()
     # Clear any previous sessions
     session.clear()
@@ -53,8 +71,9 @@ def tracks_page():
     raw_list_of_songs = []
     counter = 0
     while True:
+
         items = sp.current_user_saved_tracks(limit=50, offset=counter * 50)["items"]
-    #     sp.current_user_top_tracks(20, 0)["items"]
+        #     sp.current_user_top_tracks(20, 0)["items"]
         counter += 1
         raw_list_of_songs += items
         if len(items) < 50:
@@ -80,17 +99,27 @@ def tracks_page():
             db.session.commit()
 
     db.session.commit()
-    return redirect(url_for('songs_page', _external=True))
+    # return raw_list_of_songs
+    return redirect(url_for('home_page', _external=True))
 
     # flash('Successful! Your data has been loaded!', category='success')
 
 
-@app.route('/songs', methods=['GET', 'POST'])
-def songs_page():
-    all_songs = SongData.query.all()
-    # result = sp_datas_schemas.dump(all_songs)
-    # data_in_json = flask.jsonify(result.data)
-    return render_template("tracks.html", items=all_songs)
+# @app.route('/songs', methods=['GET', 'POST'])
+# def songs_page():
+#     all_songs = SongData.query.all()
+#     # result = sp_datas_schemas.dump(all_songs)
+#     # data_in_json = flask.jsonify(result.data)
+#     return render_template("tracks.html", items=all_songs)
+
+
+@app.route('/logout')
+def logout_page() -> object:
+    """
+    Logouts the current sessions
+    """
+    session.clear()
+    return render_template('home.html')
 
 
 def check_token() -> session:
@@ -126,7 +155,10 @@ def create_user_oauth() -> SpotifyOAuth:
     redirects user to authorization route.
     """
     sp = SpotifyOAuth(client_id=SECRET_CLIENT_ID, client_secret=SECRET_KEY,
-                      redirect_uri=url_for("authorization_page", _external=True), scope="user-library-read")
+                      redirect_uri=url_for("authorization_page", _external=True), scope="user-read-private "
+                                                                                        "user-read-email "
+                                                                                        "user-read-playback-state "
+                                                                                        "user-modify-playback-state")
     return sp
 
 

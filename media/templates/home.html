@@ -5,18 +5,28 @@
 {% endblock %}
 
 {% block content %}
-<div>
-    <h1 class="header">
-        <ul> Welcome! Please hit the Login Button to get started. <br> You will have access to the following things
-            upon login.
-            <li> Songs </li>
-            <li> Albums </li>
-            <li> Artists </li>
-        </ul>
-    </h1>
-    <div class="button-styling">
-        <a class="btn btn-primary btn-lg" href="{{ url_for('login_page') }}" role="button"> Login Page </a>
-    </div>
+<!--<div>-->
+<!--    <table class="table table-hover table-dark">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            &lt;!&ndash; Your Columns HERE &ndash;&gt;-->
+<!--            <th scope="col">SONG NAME</th>-->
+<!--            <th scope="col">BY</th>-->
+<!--            <th scope="col">ALBUM NAME</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        &lt;!&ndash; Your rows inside the table HERE: &ndash;&gt;-->
+<!--        &lt;!&ndash; FOR LOOP SYNTAX&ndash;&gt;-->
+<!--        {% for item in items %}-->
+<!--        <tr>-->
+<!--            <td>{{ item.song_name }}</td>-->
+<!--            <td>{{ item.artist_name }}</td>-->
+<!--            <td>${{ item.album_name }}</td>-->
+<!--        </tr>-->
+<!--        {% endfor %}-->
+<!--        </tbody>-->
+<!--    </table>-->
 
 </div>
 {% endblock%}

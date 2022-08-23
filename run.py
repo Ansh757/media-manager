@@ -2,4 +2,5 @@
 from media import app
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    # Can change this to false, if not testing
+    app.run(debug=True)

@@ -10,7 +10,7 @@ from media import db, ma
 # Class to store the Spotify Data
 class SongData(db.Model):
     """
-    ...
+    Song Data class to store the information of each song.
     """
     id = db.Column(db.Integer, primary_key=True)
     song_name = db.Column(db.String(length=50), unique=False, nullable=False)
@@ -34,7 +34,7 @@ class SongData(db.Model):
 
 class SongDataSchema(ma.Schema):
     """
-    ...
+    SongData Schema to get the store the fields
     """
 
     class Meta:
