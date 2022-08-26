@@ -9,7 +9,7 @@ body {
          black 66.59%,
          black 100%
        );
-
+    text-align: centre;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-style: oblique;
 }
@@ -19,12 +19,15 @@ body {
     text-decoration: double;
     background-color: rgb(55, 207, 88);
     text-align: center;
+    position: absolute;
 }
 
-.col-lg-4 {
+.col-md-4 {
     color: blue;
-    background-color: aquamarine;
-    text-align: center;
+    text-align: right;
+    margin-right: 500px;
+    position: relative;
+    left: 950px;
 }
 
 .navbar {
@@ -37,9 +40,24 @@ body {
     color: white;
 }
 
-.button-styling{
+.curr-recent-played {
+    width: 66%
+    background-color: blue;
+    height 200px;
+    z-index: 1;
+    margin-top: 30px;
+}
+
+#logout {
     margin-left: 50px;
-    height: 10rem;
-    width: 100rem;
+    height: 55px;
+}
+.curr-recent-played {
+    text-align: left;
+}
+
+img-1 {
+    float: left;
+    padding: 10px;
 }
 
