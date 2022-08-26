@@ -7,16 +7,17 @@ from media import app
 from flask import render_template, redirect, request, session, url_for, flash
 from credentials.credentials_info import SECRET_CLIENT_ID, SECRET_KEY, TOKEN_INFO
 import time
-
+import datetime as dt
 from media.models import SongData
 from media import db
 
+global user_ac_token
 
-# Endpoint for Home Page
+
 @app.route('/')
 def default_page() -> object:
     """
-    The Login Page
+    The Intro Page
     """
     return render_template("intro.html")
 
@@ -26,8 +27,37 @@ def home_page() -> object:
     """
     Home Page Route that renders the home.html
     """
-    all_songs = SongData.query.all()
-    return render_template("home.html", items=all_songs)
+    _token = request.args.get("messages")
+    sp = spotipy.Spotify(auth=_token)
+
+    curr_song = sp.current_user_playing_track()
+    if curr_song:
+        artist_name = str(curr_song['item']['artists'][0]['name'])
+        song_image = str(curr_song["item"]["album"]["images"][0]["url"])
+        song_name = str(curr_song["item"]["name"])
+        options = "Currently Playing"
+    else:
+        curr_time = dt.datetime.combine(dt.datetime.now(), dt.time.min)
+        unix_early_time = int(time.mktime(curr_time.timetuple()) * 1000)
+        curr_song = sp.current_user_recently_played(limit=1, after=unix_early_time, before=None)
+
+        artist_name = str(curr_song["items"][0]["track"]["album"]["artists"][0]["name"])
+        song_image = str(curr_song["items"][0]["track"]["album"]["images"][0]["url"])
+        song_name = str(curr_song["items"][0]["track"]["name"])
+        options = "Last Played"
+
+
+    # Combine everything into a dictionary
+    curr_song_data = {
+        "artist_name": artist_name,
+        "image": song_image,
+        "song_name": song_name,
+        "option": options
+    }
+
+    # all_songs = SongData.query.all()
+    # return render_template("home.html", songs=curr_song, items=all_songs)
+    return render_template("home.html", items=curr_song_data)
 
 
 @app.route('/login')
@@ -37,7 +67,7 @@ def login_page() -> object:
     redirects the user to the Spotify OAuthorization page
     """
     sp_oauth = create_user_oauth()
-    # # Gets the redirect url set up in the devs tools
+    # Gets the redirect url set up in the devs tools
     auth_url = sp_oauth.get_authorize_url()
     return redirect(auth_url)
 
@@ -67,13 +97,20 @@ def tracks_page():
     except SessionError:
         redirect("/")
 
+    user_ac_token = session_token["access_token"]
+
     sp = spotipy.Spotify(auth=session_token["access_token"])
+    # raw_list_of_songs = sp.current_user_playing_track()
+
     raw_list_of_songs = []
     counter = 0
     while True:
+        # curr_time = dt.datetime.combine(dt.datetime.now(), dt.time.min)
+        # unix_early_time = int(time.mktime(curr_time.timetuple()) * 1000)
+        # items = sp.current_user_recently_played(limit=2, after=unix_early_time, before=None)
 
         items = sp.current_user_saved_tracks(limit=50, offset=counter * 50)["items"]
-        #     sp.current_user_top_tracks(20, 0)["items"]
+        # sp.current_user_top_tracks(20, 0)["items"]
         counter += 1
         raw_list_of_songs += items
         if len(items) < 50:
@@ -99,18 +136,10 @@ def tracks_page():
             db.session.commit()
 
     db.session.commit()
-    # return raw_list_of_songs
-    return redirect(url_for('home_page', _external=True))
+    # return str(raw_list_of_songs)
+    return redirect(url_for('home_page', messages=user_ac_token, _external=True))
 
     # flash('Successful! Your data has been loaded!', category='success')
-
-
-# @app.route('/songs', methods=['GET', 'POST'])
-# def songs_page():
-#     all_songs = SongData.query.all()
-#     # result = sp_datas_schemas.dump(all_songs)
-#     # data_in_json = flask.jsonify(result.data)
-#     return render_template("tracks.html", items=all_songs)
 
 
 @app.route('/logout')
@@ -119,7 +148,7 @@ def logout_page() -> object:
     Logouts the current sessions
     """
     session.clear()
-    return render_template('home.html')
+    return redirect('/')
 
 
 def check_token() -> session:
@@ -141,7 +170,7 @@ def check_token() -> session:
 
 
 @app.before_first_request
-def create_tables():
+def create_tables() -> None:
     """
     Before the first request do the following: reset any databases, and then re-initialize.
     """
@@ -155,10 +184,8 @@ def create_user_oauth() -> SpotifyOAuth:
     redirects user to authorization route.
     """
     sp = SpotifyOAuth(client_id=SECRET_CLIENT_ID, client_secret=SECRET_KEY,
-                      redirect_uri=url_for("authorization_page", _external=True), scope="user-read-private "
-                                                                                        "user-read-email "
-                                                                                        "user-read-playback-state "
-                                                                                        "user-modify-playback-state")
+                      redirect_uri=url_for("authorization_page", _external=True),
+                      scope="user-library-read user-read-recently-played")
     return sp
 
 
@@ -175,3 +202,60 @@ class SessionError(Exception):
     def __init__(self, msg="Error Occurred during the session's token extraction") -> None:
         self.message = msg
         super().__init__(self.message)
+
+# #
+# {'timestamp': 1661447732479,
+#  'context': {'external_urls': {'spotify': 'https://open.spotify.com/album/47Thm1tltjJVofuRumhfmi'},
+#              'href': 'https://api.spotify.com/v1/albums/47Thm1tltjJVofuRumhfmi', 'type': 'album',
+#              'uri': 'spotify:album:47Thm1tltjJVofuRumhfmi'}, 'progress_ms': 55188, 'item': {
+#     'album': {'album_type': 'album', 'artists': [
+#         {'external_urls': {'spotify': 'https://open.spotify.com/artist/0Njy6yR9LykNKYg9yE23QN'},
+#          'href': 'https://api.spotify.com/v1/artists/0Njy6yR9LykNKYg9yE23QN', 'id': '0Njy6yR9LykNKYg9yE23QN',
+#          'name': 'Nardo Wick', 'type': 'artist', 'uri': 'spotify:artist:0Njy6yR9LykNKYg9yE23QN'}],
+#               'available_markets': ['AD', 'AE', 'AG', 'AL', 'AM', 'AO', 'AR', 'AT', 'AU', 'AZ', 'BA', 'BB', 'BD', 'BE',
+#                                     'BF', 'BG', 'BH', 'BI', 'BJ', 'BN', 'BO', 'BR', 'BS', 'BT', 'BW', 'BY', 'BZ', 'CA',
+#                                     'CD', 'CG', 'CH', 'CI', 'CL', 'CM', 'CO', 'CR', 'CV', 'CW', 'CY', 'CZ', 'DE', 'DJ',
+#                                     'DK', 'DM', 'DO', 'DZ', 'EC', 'EE', 'EG', 'ES', 'FI', 'FJ', 'FM', 'FR', 'GA', 'GB',
+#                                     'GD', 'GE', 'GH', 'GM', 'GN', 'GQ', 'GR', 'GT', 'GW', 'GY', 'HK', 'HN', 'HR', 'HT',
+#                                     'HU', 'ID', 'IE', 'IL', 'IN', 'IQ', 'IS', 'IT', 'JM', 'JO', 'JP', 'KE', 'KG', 'KH',
+#                                     'KI', 'KM', 'KN', 'KR', 'KW', 'KZ', 'LA', 'LB', 'LC', 'LI', 'LK', 'LR', 'LS', 'LT',
+#                                     'LU', 'LV', 'LY', 'MA', 'MC', 'MD', 'ME', 'MG', 'MH', 'MK', 'ML', 'MN', 'MO', 'MR',
+#                                     'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ', 'NA', 'NE', 'NG', 'NI', 'NL', 'NO', 'NP',
+#                                     'NR', 'NZ', 'OM', 'PA', 'PE', 'PG', 'PH', 'PK', 'PL', 'PS', 'PT', 'PW', 'PY', 'QA',
+#                                     'RO', 'RS', 'RW', 'SA', 'SB', 'SC', 'SE', 'SG', 'SI', 'SK', 'SL', 'SM', 'SN', 'SR',
+#                                     'ST', 'SV', 'SZ', 'TD', 'TG', 'TH', 'TJ', 'TL', 'TN', 'TO', 'TR', 'TT', 'TV', 'TW',
+#                                     'TZ', 'UA', 'UG', 'US', 'UY', 'UZ', 'VC', 'VE', 'VN', 'VU', 'WS', 'XK', 'ZA', 'ZM',
+#                                     'ZW'],
+#               'external_urls': {'spotify': 'https://open.spotify.com/album/47Thm1tltjJVofuRumhfmi'},
+#               'href': 'https://api.spotify.com/v1/albums/47Thm1tltjJVofuRumhfmi', 'id': '47Thm1tltjJVofuRumhfmi',
+#               'images': [{'height': 640, 'url': 'https://i.scdn.co/image/ab67616d0000b273b61d76c602c6234f937446c4',
+#                           'width': 640},
+#                          {'height': 300, 'url': 'https://i.scdn.co/image/ab67616d00001e02b61d76c602c6234f937446c4',
+#                           'width': 300},
+#                          {'height': 64, 'url': 'https://i.scdn.co/image/ab67616d00004851b61d76c602c6234f937446c4',
+#                           'width': 64}], 'name': 'Who is Nardo Wick?? (Deluxe)', 'release_date': '2022-07-22',
+#               'release_date_precision': 'day', 'total_tracks': 30, 'type': 'album',
+#               'uri': 'spotify:album:47Thm1tltjJVofuRumhfmi'}, 'artists': [
+#         {'external_urls': {'spotify': 'https://open.spotify.com/artist/0Njy6yR9LykNKYg9yE23QN'},
+#          'href': 'https://api.spotify.com/v1/artists/0Njy6yR9LykNKYg9yE23QN', 'id': '0Njy6yR9LykNKYg9yE23QN',
+#          'name': 'Nardo Wick', 'type': 'artist', 'uri': 'spotify:artist:0Njy6yR9LykNKYg9yE23QN'}],
+#     'available_markets': ['AD', 'AE', 'AG', 'AL', 'AM', 'AO', 'AR', 'AT', 'AU', 'AZ', 'BA', 'BB', 'BD', 'BE', 'BF',
+#                           'BG', 'BH', 'BI', 'BJ', 'BN', 'BO', 'BR', 'BS', 'BT', 'BW', 'BY', 'BZ', 'CA', 'CD', 'CG',
+#                           'CH', 'CI', 'CL', 'CM', 'CO', 'CR', 'CV', 'CW', 'CY', 'CZ', 'DE', 'DJ', 'DK', 'DM', 'DO',
+#                           'DZ', 'EC', 'EE', 'EG', 'ES', 'FI', 'FJ', 'FM', 'FR', 'GA', 'GB', 'GD', 'GE', 'GH', 'GM',
+#                           'GN', 'GQ', 'GR', 'GT', 'GW', 'GY', 'HK', 'HN', 'HR', 'HT', 'HU', 'ID', 'IE', 'IL', 'IN',
+#                           'IQ', 'IS', 'IT', 'JM', 'JO', 'JP', 'KE', 'KG', 'KH', 'KI', 'KM', 'KN', 'KR', 'KW', 'KZ',
+#                           'LA', 'LB', 'LC', 'LI', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY', 'MA', 'MC', 'MD', 'ME',
+#                           'MG', 'MH', 'MK', 'ML', 'MN', 'MO', 'MR', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ', 'NA',
+#                           'NE', 'NG', 'NI', 'NL', 'NO', 'NP', 'NR', 'NZ', 'OM', 'PA', 'PE', 'PG', 'PH', 'PK', 'PL',
+#                           'PS', 'PT', 'PW', 'PY', 'QA', 'RO', 'RS', 'RW', 'SA', 'SB', 'SC', 'SE', 'SG', 'SI', 'SK',
+#                           'SL', 'SM', 'SN', 'SR', 'ST', 'SV', 'SZ', 'TD', 'TG', 'TH', 'TJ', 'TL', 'TN', 'TO', 'TR',
+#                           'TT', 'TV', 'TW', 'TZ', 'UA', 'UG', 'US', 'UY', 'UZ', 'VC', 'VE', 'VN', 'VU', 'WS', 'XK',
+#                           'ZA', 'ZM', 'ZW'], 'disc_number': 2, 'duration_ms': 150798, 'explicit': True,
+#     'external_ids': {'isrc': 'USRC12103535'},
+#     'external_urls': {'spotify': 'https://open.spotify.com/track/0ThckDUL3cPr5OyoMlCnoD'},
+#     'href': 'https://api.spotify.com/v1/tracks/0ThckDUL3cPr5OyoMlCnoD', 'id': '0ThckDUL3cPr5OyoMlCnoD',
+#     'is_local': False, 'name': 'Bad Boy', 'popularity': 44,
+#     'preview_url': 'https://p.scdn.co/mp3-preview/090e83be9c4e21a88576459b3bfc61b1c0956ce1?cid=4934417ccd344dd1877f05ed4a5d243a',
+#     'track_number': 16, 'type': 'track', 'uri': 'spotify:track:0ThckDUL3cPr5OyoMlCnoD'},
+#  'currently_playing_type': 'track', 'actions': {'disallows': {'resuming': True}}, 'is_playing': True}
