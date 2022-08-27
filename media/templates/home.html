@@ -6,14 +6,16 @@
 
 {% block content %}
 
+    <div class="row">
+        <div class="col-md-8 curr-recent-played">
+            <img class="img-1" src="{{ items['image'] }} " alt="Picture" width="200px" height="200px">
+            <h1 class="option"> {{ items["option"] }}</h1>
+            <h1> {{ items["song_name" ]}} By {{ items["artist_name"]}}</h1>
+        </div>
 
-    <div class="curr-recent-played">
-        <img class="img-1" src="{{ items['image'] }} " alt="Picture" width="200px" height="200px">
-        <h1> {{ items["option"] }}</h1>
-
-        <p> {{ items["song_name" ]}} By {{ items["artist_name"]}}</p>
+        <div class="col-md-4 top-artists">
+            <h1 class="option"> Top Artists </h1>
+        </div>
     </div>
-
-
 {% endblock%}
 

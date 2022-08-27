@@ -31,6 +31,7 @@ def home_page() -> object:
     sp = spotipy.Spotify(auth=_token)
 
     curr_song = sp.current_user_playing_track()
+    # If curr_song is there
     if curr_song:
         artist_name = str(curr_song['item']['artists'][0]['name'])
         song_image = str(curr_song["item"]["album"]["images"][0]["url"])
@@ -54,6 +55,7 @@ def home_page() -> object:
         "song_name": song_name,
         "option": options
     }
+
 
     # all_songs = SongData.query.all()
     # return render_template("home.html", songs=curr_song, items=all_songs)
@@ -185,7 +187,7 @@ def create_user_oauth() -> SpotifyOAuth:
     """
     sp = SpotifyOAuth(client_id=SECRET_CLIENT_ID, client_secret=SECRET_KEY,
                       redirect_uri=url_for("authorization_page", _external=True),
-                      scope="user-library-read user-read-recently-played")
+                      scope="user-library-read user-read-recently-played user-top-read")
     return sp
 
 

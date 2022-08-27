@@ -1,20 +1,20 @@
 /* Styling for base.html */
 body {
-     width: 100%;
-       min-height: 100vh;
-       background: linear-gradient(
-         to right,
-         #B4F8C8 0%,
-         #B4F8C8 66.59%,
-         black 66.59%,
-         black 100%
-       );
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(
+        to right,
+        #B4F8C8 0%,
+        #B4F8C8 66.59%,
+        black 66.59%,
+        black 100%
+    );
     text-align: centre;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-style: oblique;
 }
 
-.col-md-8 {
+.base.col-md-8 {
     color: rgb(0, 0, 0);
     text-decoration: double;
     background-color: rgb(55, 207, 88);
@@ -22,7 +22,7 @@ body {
     position: absolute;
 }
 
-.col-md-4 {
+.base.col-md-4 {
     color: blue;
     text-align: right;
     margin-right: 500px;
@@ -41,23 +41,35 @@ body {
 }
 
 .curr-recent-played {
-    width: 66%
-    background-color: blue;
-    height 200px;
+    width: 63%;
+    height: 200px;
     z-index: 1;
-    margin-top: 30px;
+    margin: 25px;
+    text-align: left;
 }
 
 #logout {
     margin-left: 50px;
     height: 55px;
 }
-.curr-recent-played {
-    text-align: left;
+
+.img-1 {
+    float: left;
+    border-radius: 30px;
+    margin-right: 40px;
 }
 
-img-1 {
-    float: left;
-    padding: 10px;
+.option {
+    color: rgb(13, 171, 47);
+    text-transform: uppercase;
+    text-decoration: double;
+}
+
+.top-artists h1 {
+    color: white;
+    height: 400px;
+    margin-top: 25px;
+    padding-left: 10px;
+    text-align: center;
 }
 
