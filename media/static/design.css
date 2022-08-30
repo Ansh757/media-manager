@@ -65,11 +65,87 @@ body {
     text-decoration: double;
 }
 
-.top-artists h1 {
-    color: white;
-    height: 400px;
+.top-artists {
+    text-align: center;
+}
+
+.top-artists .option {
     margin-top: 25px;
     padding-left: 10px;
     text-align: center;
 }
 
+.top-artists .img-2 {
+    margin: 10px auto 10px auto;
+    border-radius: 45px;
+    text-align: center;
+    border-color: white;
+}
+
+.heading {
+    color: white;
+}
+
+.section-break {
+    margin-top: 115px;
+    border-top: 2px dotted white;
+}
+
+.fa-mobile-notch {
+    color: white;
+}
+
+.playlist {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.name {
+    padding: 0 4rem;
+    text-align: left;
+}
+
+.table {
+    border-collapse: collapse;
+    width: 100%;
+    border-spacing: 2em;
+}
+
+.footer {
+    height: 100px;
+    background-color: rgb(55, 207, 88);
+}
+
+.outer {
+    margin-top: 25px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.songs {
+    color: white;
+}
+
+.btn {
+	box-shadow:inset 0px 1px 0px 0px #cf866c;
+	background:linear-gradient(to bottom, #d0451b 5%, #bc3315 100%);
+	background-color:#d0451b;
+	border-radius:3px;
+	border:1px solid #942911;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:13px;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #854629;
+}
+.btn:hover {
+	background:linear-gradient(to bottom, #bc3315 5%, #d0451b 100%);
+	background-color:#bc3315;
+}
+.btn:active {
+	position:relative;
+	top:1px;
+}
