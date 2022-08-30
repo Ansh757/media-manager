@@ -5,28 +5,30 @@ Songs Page
 {% endblock %}
 
 {% block content %}
+<!--Pagination Code Pen Reference: https://codepen.io/adminHT/pen/QWwOpPX -->
+    <div class="outer">
 
-<!--<table class="table table-hover table-dark">-->
-<!--    <thead>-->
-<!--    <tr>-->
-<!--        &lt;!&ndash; Your Columns HERE &ndash;&gt;-->
-<!--        <th scope="col">SONG NAME</th>-->
-<!--        <th scope="col">BY</th>-->
-<!--        <th scope="col">ALBUM NAME</th>-->
-<!--    </tr>-->
-<!--    </thead>-->
-<!--    <tbody>-->
-<!--    &lt;!&ndash; Your rows inside the table HERE: &ndash;&gt;-->
-<!--    &lt;!&ndash; FOR LOOP SYNTAX&ndash;&gt;-->
-<!--    {% for item in items %}-->
-<!--    <tr>-->
-<!--        <td>{{ item.song_name }}</td>-->
-<!--        <td>{{ item.artist_name }}</td>-->
-<!--        <td>${{ item.album_name }}</td>-->
-<!--    </tr>-->
-<!--    {% endfor %}-->
-<!--    </tbody>-->
-<!--</table>-->
+
+        <table class="table table-borderless">
+            <thead>
+            <tr>
+                <!-- Your Columns HERE -->
+                <th class="songs" scope="col">SONG NAME</th>
+                <th class="songs" scope="col">BY</th>
+                <th class="songs" scope="col">ALBUM NAME</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in items %}
+            <tr>
+                <td class="songs" >{{ item.song_name }}</td>
+                <td class="songs" >{{ item.artist_name }}</td>
+                <td class="songs" >{{ item.album_name }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 {% endblock %}
 
