@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Songs Page
+{% endblock %}
+
+{% block content %}
+<!--Pagination Code Pen Reference: https://codepen.io/adminHT/pen/QWwOpPX -->
+<div class="outer">
+
+
+    <table class="table table-borderless">
+        <thead>
+        <tr>
+            <!-- Your Columns HERE -->
+            <th class="songs" scope="col">ALBUM NAME</th>
+            <th class="songs" scope="col">PICTURE</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+        <tr>
+            <td class="songs">{{ item.artist_name }}</td>
+            <td> <img class="pic" src="{{ item.image_url }}"> </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+
+

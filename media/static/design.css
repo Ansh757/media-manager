@@ -75,11 +75,10 @@ body {
     text-align: center;
 }
 
-.top-artists .img-2 {
+.top-artists .img-2  {
     margin: 10px auto 10px auto;
     border-radius: 45px;
     text-align: center;
-    border-color: white;
 }
 
 .heading {
@@ -117,7 +116,7 @@ body {
 }
 
 .outer {
-    margin-top: 25px;
+    margin: 50px;
     color: white;
     background-color: rgba(0, 0, 0, 0.5);
 }
@@ -148,4 +147,12 @@ body {
 .btn:active {
 	position:relative;
 	top:1px;
+}
+
+.pic {
+    margin: 10px auto 10px auto;
+    border-radius: 45px;
+    text-align: center;
+    height: 100px;
+    width: 100px;
 }

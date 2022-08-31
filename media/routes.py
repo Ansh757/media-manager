@@ -9,7 +9,7 @@ from flask import render_template, redirect, request, session, url_for
 from credentials.credentials_info import SECRET_CLIENT_ID, SECRET_KEY, TOKEN_INFO
 import time
 import datetime as dt
-from media.models import SongData
+from media.models import SongData, ArtistData
 from media import db
 from typing import List
 
@@ -163,46 +163,44 @@ def tracks_page() -> object:
     all_songs = SongData.query.all()
     return render_template("tracks.html", items=all_songs)
 
-#
-# @app.route('/myArtists', methods=['GET', 'POST'])
-# def tracks_page() -> object:
-#     """
-#         Saved Tracks Page
-#     """
-#     global session_token
-#     try:
-#         # at this point, the access_token is valid
-#         session_token = check_token()
-#         # If Session Error is received, redirect back to the login
-#     except SessionError:
-#         redirect("/")
-#
-#     sp = spotipy.Spotify(auth=session_token["access_token"])
-#
-#     raw_list_of_artists = traverse_artists(sp)
-#
-#     for i in range(len(raw_list_of_artists)):
-#
-#         # Create a SD Object for each song
-#         artist_name = str(raw_list_of_artists[i]['track']['artists'][0]['name'])
-#         song_name = str(raw_list_of_artists[i]['track']['name'])
-#         song_uri = str(raw_list_of_artists[i]['track']['artists'][0]['uri'])
-#         album_name = str(raw_list_of_artists[i]['track']['album']['name'])
-#         album_uri = str(raw_list_of_artists[i]['track']['album']['uri'])
-#         sd = ArtistData(song_name, artist_name, album_uri, album_name, song_uri)
-#
-#         # Add to the current session
-#         db.session.add(sd)
-#
-#         if db.session.query(ArtistData).count() % 50 == 0:
-#             db.session.commit()
-#
-#     db.session.commit()
-#
-#     all_songs = ArtistDate.query.all()
-#     return render_template("tracks.html", items=all_songs)
-#     # flash('Successful! Your data has been loaded!', category='success')
-#
+
+@app.route('/myArtists', methods=['GET', 'POST'])
+def artists_page() -> object:
+    """
+        Saved Artists Page
+    """
+    global session_token
+    try:
+        # at this point, the access_token is valid
+        session_token = check_token()
+        # If Session Error is received, redirect back to the login
+    except SessionError:
+        redirect("/")
+
+    sp = spotipy.Spotify(auth=session_token["access_token"])
+
+    raw_list_of_artists = traverse_artists(sp)
+
+    for i in range(len(raw_list_of_artists)):
+
+        # Create a AD Object for each Artist
+        # top_five_artists_data[i]["name"], top_five_artists_data["items"][i]["images"][0]["url"]
+        artist_name = str(raw_list_of_artists[i]['name'])
+        image_url = str(raw_list_of_artists[i]["images"][0]["url"])
+        ad = ArtistData(artist_name, image_url)
+
+        # Add to the current session
+        db.session.add(ad)
+
+        if db.session.query(ArtistData).count() % 50 == 0:
+            db.session.commit()
+
+    db.session.commit()
+
+    all_songs = ArtistData.query.all()
+    return render_template("artists.html", items=all_songs)
+    # return str(raw_list_of_artists)
+
 
 @app.route('/logout')
 def logout_page() -> object:
@@ -275,7 +273,6 @@ def traverse(sp: Spotify) -> List:
     counter = 0
     while True:
         items = sp.current_user_saved_tracks(limit=50, offset=counter * 50)["items"]
-
         counter += 1
         lst += items
         if len(items) < 50:
@@ -290,13 +287,13 @@ def traverse_artists(sp: Spotify) -> List:
     lst = []
     counter = 0
     while True:
-        items = sp.current_user_saved_tracks(limit=50, offset=counter * 50)["items"]
-
+        items = sp.current_user_top_artists(limit=50, offset=counter * 50)["items"]
         counter += 1
         lst += items
         if len(items) < 50:
             break
     return lst
+
 
 def traverse_playlists(sp: Spotify) -> List:
     """
