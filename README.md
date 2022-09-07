@@ -20,6 +20,11 @@ $ cd into the project
 $ cd `credentials` and add your `Cliend ID` and `Secret Key` in `credentials_info.py`
 $ Set `SESSION_SECRET_KEY` to anything you would like. (refer's to the current session's key)
 $ cd .. 
-$ On Mac: `export FLASK_APP=run.py` | On Windows: `set FLASK_APP=run.py`
+$ On Mac: `export FLASK_APP=run.py` | On Windows: `set FLASK_APP=run.py` for info visit: https://flask.palletsprojects.com/en/1.1.x/cli/
 $ `flask run` 
 ```
+
+# Collaboration 
+- Spotify 
+
+For any questions, bugs, or inquries submit a issue request, thanks!
