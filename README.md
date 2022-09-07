@@ -17,6 +17,9 @@ After the sucess from above.
 ```
 $ git clone
 $ cd into the project
-$ cd `credentials` and add your `Cliend ID` and Secret Key
-$ 
+$ cd `credentials` and add your `Cliend ID` and `Secret Key` in `credentials_info.py`
+$ Set `SESSION_SECRET_KEY` to anything you would like. (refer's to the current session's key)
+$ cd .. 
+$ On Mac: `export FLASK_APP=run.py` | On Windows: `set FLASK_APP=run.py`
+$ `flask run` 
 ```
